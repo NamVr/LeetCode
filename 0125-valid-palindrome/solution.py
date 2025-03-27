@@ -5,9 +5,10 @@ class Solution:
         while l <= r:
             while l < r and not s[l].isalnum():
                 l += 1
-            while r > l and not s[r].isalnum():
+            while l < r and not s[r].isalnum():
                 r -= 1
             
+            # now check if both are valid palindrome or not
             if s[l].lower() != s[r].lower():
                 return False
             
