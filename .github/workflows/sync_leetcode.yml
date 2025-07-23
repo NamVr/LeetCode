@@ -18,3 +18,19 @@ jobs:
           leetcode-session: ${{ secrets.LEETCODE_SESSION }}
           verbose: true
           commit-header: "[LeetCode Sync]"
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Update README
+        run: python .github/scripts/update_readme.py
+
+      - name: Commit README update
+        run: |
+          github-token: ${{ github.token }}
+          git add README.md
+          git commit -m "[Auto] Update README with latest stats"
+          git push
+        continue-on-error: true
