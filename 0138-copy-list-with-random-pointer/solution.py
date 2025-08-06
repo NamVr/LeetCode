@@ -9,21 +9,21 @@ class Node:
 
 class Solution:
     def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
-        m = { None : None } # OG Node : Copy Node
-        # edge case, if null is called, null is linked
-        
-        # pass 1 : create nodes and map them
+        m = { None : None } # edge case, null -> null
+
         curr = head
+
+        # PASS 1: Hashmap.
         while curr:
             copy = Node(curr.val)
             m[curr] = copy
-
             curr = curr.next
-
-        # pass 2 : link nodes together
+        
         curr = head
+
+        # PASS 2: Create new linked list.
         while curr:
-            copy = m[curr] # get the copy node
+            copy = m[curr]
             copy.next = m[curr.next]
             copy.random = m[curr.random]
             curr = curr.next
