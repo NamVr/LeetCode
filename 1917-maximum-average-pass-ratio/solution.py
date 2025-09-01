@@ -10,7 +10,10 @@ class Solution:
         max_heap = []
         for passes, total_students in classes:
             gain = _calculate_gain(passes, total_students)
-            heapq.heappush(max_heap, (-gain, passes, total_students))
+            max_heap.append((-gain, passes, total_students))
+
+        # Use heapify to transform the list into a valid heap in O(n)
+        heapq.heapify(max_heap)
 
         # Distribute extra students
         for _ in range(extraStudents):
@@ -25,8 +28,7 @@ class Solution:
             )
 
         # Calculate the final average pass ratio
-        total_pass_ratio = 0
-        while max_heap:
-            _, passes, total_students = heapq.heappop(max_heap)
-            total_pass_ratio += passes / total_students
+        total_pass_ratio = sum(
+            passes / total_students for _, passes, total_students in max_heap
+        )
         return total_pass_ratio / len(classes)
