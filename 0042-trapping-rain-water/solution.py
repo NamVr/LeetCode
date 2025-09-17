@@ -6,14 +6,13 @@ class Solution:
         maxl, maxr = height[l], height[r]
 
         while l < r:
-            if maxl <= maxr:
-                # move the left pointer.
+            if maxl <= maxr: # traverse from left
                 l += 1
                 maxl = max(maxl, height[l])
                 res += maxl - height[l]
-            else:
+            else: # traverse from right
                 r -= 1
                 maxr = max(maxr, height[r])
                 res += maxr - height[r]
-
+                
         return res
