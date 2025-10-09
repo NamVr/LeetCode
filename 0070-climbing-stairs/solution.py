@@ -1,13 +1,10 @@
 class Solution:
+    memo = {} # n : value
     def climbStairs(self, n: int) -> int:
-        # 1 2 3 4 5 6 (value of n)
-        # 1 2 3 5 8 13 (result)
-
-        l,r = 1,1
-
-        for i in range(n-1):
-            temp = l
-            l = l + r
-            r = temp
+        if n == 0 or n == 1:
+            return 1
         
-        return l
+        if n not in self.memo:
+            self.memo[n] = self.climbStairs(n-1) + self.climbStairs(n-2)
+        
+        return self.memo[n]
