@@ -2,54 +2,42 @@ class Solution:
     def maxKDivisibleComponents(
         self, n: int, edges: List[List[int]], values: List[int], k: int
     ) -> int:
-        # Step 1: Create adjacency list from edges
-        adj_list = [[] for _ in range(n)]
+        if n < 2:
+            return 1
+        component_count = 0
+        graph = defaultdict(list)
+        in_degree = [0 for _ in range(n)]
+
+        # Build the graph and calculate in-degrees
         for node1, node2 in edges:
-            adj_list[node1].append(node2)
-            adj_list[node2].append(node1)
+            graph[node1].append(node2)
+            graph[node2].append(node1)
+            in_degree[node1] += 1
+            in_degree[node2] += 1
 
-        # Step 2: Initialize component count
-        component_count = [0]  # Use a list to pass by reference
+        # Initialize the queue with nodes having in-degree of 1 (leaf nodes)
+        queue = deque(node for node in range(n) if in_degree[node] == 1)
 
-        # Step 3: Start DFS traversal from node 0
-        self.dfs(0, -1, adj_list, values, k, component_count)
+        while queue:
+            current_node = queue.popleft()
+            in_degree[current_node] -= 1
+            add_value = 0
 
-        # Step 4: Return the total number of components
-        return component_count[0]
+            # Check if the current node's value is divisible by k
+            if values[current_node] % k == 0:
+                component_count += 1
+            else:
+                add_value = values[current_node]
 
-    def dfs(
-        self,
-        current_node: int,
-        parent_node: int,
-        adj_list: List[List[int]],
-        node_values: List[int],
-        k: int,
-        component_count: List[int],
-    ) -> int:
-        # Step 1: Initialize sum for the current subtree
-        sum_ = 0
+            # Propagate the value to the neighbor nodes
+            for neighbor_node in graph[current_node]:
+                if in_degree[neighbor_node] == 0:
+                    continue
+                in_degree[neighbor_node] -= 1
+                values[neighbor_node] += add_value
 
-        # Step 2: Traverse all neighbors
-        for neighbor_node in adj_list[current_node]:
-            if neighbor_node != parent_node:
-                # Recursive call to process the subtree rooted at the neighbor
-                sum_ += self.dfs(
-                    neighbor_node,
-                    current_node,
-                    adj_list,
-                    node_values,
-                    k,
-                    component_count,
-                )
-                sum_ %= k  # Ensure the sum stays within bounds
+                # If the neighbor node's in-degree becomes 1, add it to the queue
+                if in_degree[neighbor_node] == 1:
+                    queue.append(neighbor_node)
 
-        # Step 3: Add the value of the current node to the sum
-        sum_ += node_values[current_node]
-        sum_ %= k
-
-        # Step 4: Check if the sum is divisible by k
-        if sum_ == 0:
-            component_count[0] += 1
-
-        # Step 5: Return the computed sum for the current subtree
-        return sum_
+        return component_count
