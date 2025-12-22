@@ -1,4 +1,4 @@
-/* Write your T-SQL query statement below */
+-- 23BCT10010 G1
 SELECT A.machine_id, round(avg(B.timestamp - A.timestamp), 3) as processing_time
 FROM Activity as A
 JOIN
