@@ -1,4 +1,5 @@
-# Write your MySQL query statement below
+# 23BCT10010 WWC _ G1
+
 SELECT E.name, B.bonus
 FROM Employee E
 LEFT OUTER JOIN Bonus B
