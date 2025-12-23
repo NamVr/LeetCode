@@ -1,18 +1,19 @@
 class Solution:
-    def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
+    def eraseOverlapIntervals(self, events: List[List[int]]) -> int:
         res = 0
 
-        intervals.sort() # start,end : sort based on starting point
-        prev = intervals[0][1] # keep track of last end point
+        events.sort() # [start,end] sorted based on start indexes.
+        endTime = events[0][1] # keep track of the latest end value, start with the first index.
 
-        # traverse through all intervals from the second element
-        for start, end in intervals[1:]:
-            if prev <= start:
-                # non overlapping, update the new end
-                prev = end
+        for start, end in events[1:]:
+            # ground truth, if the start value of the current element is less than the end time
+            # that will result in an overlap.
+
+            if start >= endTime:
+                # normal condition, update endTime
+                endTime = end # new end
             else:
-                # overlapping
+                # overlap detected.
                 res += 1
-                prev = min(prev,end)
-
+                endTime = min(end, endTime) # it is better to keep the end time minimum to get less overlaps (greedy)
         return res
