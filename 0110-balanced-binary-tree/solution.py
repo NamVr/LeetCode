@@ -5,14 +5,19 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-    def isBalanced(self, root: Optional[TreeNode]) -> int:
-        def dfs(root):
-            if not root: return [True, 0]
-            # [is the tree balanced? , height of tree]
+    def isBalanced(self, root: Optional[TreeNode]) -> bool:
+        if not root: return True
 
-            left, right = dfs(root.left), dfs(root.right)
+        def height(root):
+            if root is None:
+                return 0
+            
+            left = height(root.left)
+            right = height(root.right)
 
-            balanced = left[0] and right[0] and abs(left[1] - right[1]) <= 1
-            return [balanced, 1 + max(left[1], right[1])]
-
-        return dfs(root)[0]
+            if abs(left - right) > 1 or left == -1 or right == -1: # -1 is false flag.
+                return -1 # False.
+            
+            return 1 + max(left, right) # max height from left and right sub trees.
+        
+        return height(root) != -1
