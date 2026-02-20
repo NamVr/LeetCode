@@ -3,7 +3,7 @@ name: Sync Leetcode
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 8 * * 6"
 
 jobs:
   build:
@@ -16,21 +16,6 @@ jobs:
           github-token: ${{ github.token }}
           leetcode-csrf-token: ${{ secrets.LEETCODE_CSRF_TOKEN }}
           leetcode-session: ${{ secrets.LEETCODE_SESSION }}
+          destination-folder: my-folder
           verbose: true
           commit-header: "[LeetCode Sync]"
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Update README
-        run: python .github/scripts/update_readme.py
-
-      - name: Commit README update
-        run: |
-          github-token: ${{ github.token }}
-          git add README.md
-          git commit -m "[Auto] Update README with latest stats"
-          git push
-        continue-on-error: true
